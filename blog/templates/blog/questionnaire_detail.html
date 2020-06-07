@@ -1,0 +1,29 @@
+{% extends "blog/base.html"%}
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ report.author }}</a>
+            <small class="text-muted">{{ report.date_posted|date:"F d, Y" }}</small>
+        </div>
+        <h2 class="article-title">Kebijakan Manajemen Biorisiko</h2>
+        <p class="article-content">{{ report.nilai_satu }}</p>
+        <p class="article-content">{{ report.keterangan_satu }}</p>
+        <p class="article-content">{{ report.rekomendasi_satu }}</p>
+        <p class="article-content">{{ report.nilai_dua }}</p>
+        <p class="article-content">{{ report.keterangan_dua }}</p>
+        <p class="article-content">{{ report.rekomendasi_dua }}</p>
+        <p class="article-content">{{ report.nilai_tiga }}</p>
+        <p class="article-content">{{ report.keterangan_tiga }}</p>
+        <p class="article-content">{{ report.rekomendasi_tiga }}</p>
+        <p class="article-content">{{ report.nilai_empat }}</p>
+        <p class="article-content">{{ report.keterangan_empat }}</p>
+        <p class="article-content">{{ report.rekomendasi_empat }}</p>
+        <p class="article-content">{{ report.nilai_lima }}</p>
+        <p class="article-content">{{ report.keterangan_lima }}</p>
+        <p class="article-content">{{ report.rekomendasi_lima }}</p>
+        <p class="article-content">{{ report.nilai_enam }}</p>
+        <p class="article-content">{{ report.keterangan_enam }}</p>
+        <p class="article-content">{{ report.rekomendasi_enam }}</p>
+    </div>
+    {% endblock content%}

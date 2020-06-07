@@ -1,0 +1,39 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+<!-- ============================================================== -->
+<!-- signup form  -->
+<!-- ============================================================== -->
+
+<!-- ============================================================== -->
+<!-- signup form  -->
+<!-- ============================================================== -->
+{% block content %}
+<div class="card-header text-center"><a href="#"><img class="logo-img"
+            src="{% static 'users/assets/images/indohun.png' %}" alt="logo"></a>
+    <span class="splash-description">Formulir Registrasi</span>
+    <span class="splash-description">Silahkan masukan informasi anda</span>
+</div>
+<div class="card-body">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <label class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox"><span class="custom-control-label">Ingat
+                    Akun Saya</span>
+            </label>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Registrasi</button>
+        </div>
+    </form>
+</div>
+<div class="card-footer bg-white p-0  ">
+    <div class="card-footer-item card-footer-item-bordered">
+        <p>Sudah menjadi anggota? <a href="{% url 'login' %}" class="text-secondary">Masuk Disini.</a></p>
+    </div>
+</div>
+{% endblock content %}
