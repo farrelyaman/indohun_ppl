@@ -1,17 +1,17 @@
-from django.forms import modelform_factory
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.urls import reverse
-from .forms import ContactUsForm, QuestionnaireForm
-from . import constants
+from .forms import ContactUsForm
 from django.views.generic import(
     ListView,
     DetailView,
     CreateView,
-    FormView
+    FormView,
+    UpdateView,
+    DeleteView
 )
 from .models import (
     Questionnaire,
@@ -19,28 +19,10 @@ from .models import (
 
 # Create your views here.
 
-posts = [
-    {
-        'author': 'CoreyMS',
-        'title': 'Blog Post 1',
-        'content': 'First Post Content',
-        'date_posted': 'May 4, 2020',
-    },
-    {
-        'author': 'John Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second Post Content',
-        'date_posted': 'May 5, 2020',
-    },
-]
-
 
 @login_required
 def home(request):
-    context = {
-        'posts': posts
-    }
-    return render(request, 'blog/home.html', context)
+    return render(request, 'blog/home.html')
 
 
 class ReportListView(LoginRequiredMixin, ListView):
@@ -49,90 +31,61 @@ class ReportListView(LoginRequiredMixin, ListView):
     context_object_name = 'reports'
     ordering = ['-date_posted']
 
+    def get_queryset(self):
+        user = self.request.user
+        return Questionnaire.objects.filter(author=user)
+
 
 class ReportDetailView(LoginRequiredMixin, DetailView):
     model = Questionnaire  # <app>/<model>_<viewtype>.html
     context_object_name = 'report'
 
 
-def get_questionnaire_from_hash(session_hash):
-    return Questionnaire.objects.filter(
-        session_hash=session_hash,
-    ).exclude(
-        stage=constants.COMPLETE
-    ).first()
-
-
-class ReportCreateView(LoginRequiredMixin, FormView):
-    template_name = 'blog/questionnaire_form.html'  # <app>/<model>_<viewtype>.html
-    questionnaire = None
-    form_class = None
-
-    def dispatch(self, request, *args, **kwargs):
-        session_hash = request.session.get("session_hash", None)
-        self.questionnaire = get_questionnaire_from_hash(
-            session_hash)
-        self.request = request
-        return super().dispatch(request, *args, **kwargs)
+class ReportCreateView(LoginRequiredMixin, CreateView):
+    model = Questionnaire  # <app>/<model>_form.html
+    fields = ['nilai_satu', 'keterangan_satu', 'rekomendasi_satu',
+              'nilai_dua', 'keterangan_dua', 'rekomendasi_dua',
+              'nilai_tiga', 'keterangan_tiga', 'rekomendasi_tiga',
+              'nilai_empat', 'keterangan_empat', 'rekomendasi_empat',
+              'nilai_lima', 'keterangan_lima', 'rekomendasi_lima',
+              'nilai_enam', 'keterangan_enam', 'rekomendasi_enam', ]
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        self.request.session['session_hash'] = form.instance.session_hash
-        current_stage = form.cleaned_data.get('stage')
-        new_stage = constants.STAGE_ORDER[constants.STAGE_ORDER.index(
-            current_stage)+1]
-        form.instance.stage = new_stage
-        form.save()
-        if new_stage == constants.COMPLETE:
-            return redirect(reverse('questionnaire:blog-home'))
-        else:
-            return redirect(reverse('questionnaire:report-create'))
-
-    def get_form_class(self):
-        stage = self.questionnaire.stage if self.questionnaire else constants.STAGE_1
-        fields = Questionnaire.get_fields_by_stage(stage)
-        return modelform_factory(Questionnaire, QuestionnaireForm, fields)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.questionnaire
-        return kwargs
+        return super().form_valid(form)
 
 
-class ReportUpdateView(LoginRequiredMixin, FormView):
-    template_name = 'blog/questionnaire_form.html'  # <app>/<model>_<viewtype>.html
-    questionnaire = None
-    form_class = None
-
-    def dispatch(self, request, *args, **kwargs):
-        session_hash = request.session.get("session_hash", None)
-        self.questionnaire = get_questionnaire_from_hash(
-            session_hash)
-        self.request = request
-        return super().dispatch(request, *args, **kwargs)
+class ReportUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Questionnaire  # <app>/<model>_form.html
+    context_object_name = 'report'
+    fields = ['nilai_satu', 'keterangan_satu', 'rekomendasi_satu',
+              'nilai_dua', 'keterangan_dua', 'rekomendasi_dua',
+              'nilai_tiga', 'keterangan_tiga', 'rekomendasi_tiga',
+              'nilai_empat', 'keterangan_empat', 'rekomendasi_empat',
+              'nilai_lima', 'keterangan_lima', 'rekomendasi_lima',
+              'nilai_enam', 'keterangan_enam', 'rekomendasi_enam', ]
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        self.request.session['session_hash'] = form.instance.session_hash
-        current_stage = form.cleaned_data.get('stage')
-        new_stage = constants.STAGE_ORDER[constants.STAGE_ORDER.index(
-            current_stage)+1]
-        form.instance.stage = new_stage
-        form.save()
-        if new_stage == constants.COMPLETE:
-            return redirect(reverse('questionnaire:blog-home'))
-        else:
-            return redirect(reverse('questionnaire:report-create'))
+        return super().form_valid(form)
 
-    def get_form_class(self):
-        stage = self.questionnaire.stage if self.questionnaire else constants.STAGE_1
-        fields = Questionnaire.get_fields_by_stage(stage)
-        return modelform_factory(Questionnaire, QuestionnaireForm, fields)
+    def test_func(self):
+        questionnaire = self.get_object()
+        if self.request.user == questionnaire.author:
+            return True
+        return False
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.questionnaire
-        return kwargs
+
+class ReportDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Questionnaire  # <app>/<model>_<viewtype>.html
+    context_object_name = 'report'
+    success_url = '/report'
+
+    def test_func(self):
+        questionnaire = self.get_object()
+        if self.request.user == questionnaire.author:
+            return True
+        return False
 
 
 def about(request):

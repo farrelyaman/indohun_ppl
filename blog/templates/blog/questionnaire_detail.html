@@ -26,4 +26,10 @@
         <p class="article-content">{{ report.keterangan_enam }}</p>
         <p class="article-content">{{ report.rekomendasi_enam }}</p>
     </div>
+    {% if report.author == user %}
+    <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'report-update' report.id %}">Update</a>
+        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'report-delete' report.id %}">Delete</a>
+    </div>
+    {% endif %}
     {% endblock content%}

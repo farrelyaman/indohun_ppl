@@ -8,7 +8,7 @@
             <a class="mr-2" href="#">{{ report.author }}</a>
             <small class="text-muted">{{ report.date_posted|date:"F d, Y" }}</small>
         </div>
-        <h2><a class="article-title" href="{% url 'questionnaire:report-detail' report.id %}">Hasil Laporan</a>
+        <h2><a class="article-title" href="{% url 'report-detail' report.id %}">Hasil Laporan</a>
     </div>
 </article>
 {% endfor %}
