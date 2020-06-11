@@ -99,4 +99,4 @@ class Profile(models.Model):
     tambahan_info = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return f'{self.user} Profile'
+        return f'Laboratorium {self.nama_lengkap_laboratorium}'
