@@ -24,7 +24,7 @@ Setelah itu, kita menginstall segala dependency yang kita butuhkan (yang tertuli
 pip3 install -r requirements.txt
 ```
 
-Kita bisa run website ini dalam local komputer dengan alamat port http://127.0.0.1:8000/ atau localhost/8000
+Kita bisa run website ini dalam local komputer dengan alamat port http://127.0.0.1:8000/ atau localhost:8000
 
 ```
 python3 manage.py runserver
@@ -36,16 +36,8 @@ Jangan lupa, jika ada perubahan di dalam file `models.py` untuk selalu melakukan
 python3 manage.py makemigrations
 python3 manage.py migrate
 ```
+Untuk menjalankan fitur Reset Password dengan settingan `settings.py` di baris paling bawah, gunakan perintah dibawah ini dan dijalankan pada tab terminal yang berbeda dari dijalankannya web django --> `python3 manage.py runserver`
 
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+```
+python -m smtpd -n -c DebuggingServer localhost:1025
+```

@@ -1,6 +1,7 @@
 {% extends "blog/base.html"%}
 {% block content %}
 <h1>Perangkat Penilaian Laboratorium (PPL) Manajemen Biorisiko</h1>
+{% if reports %}
 {% for report in reports %}
 <article class="media content-section">
     <div class="media-body">
@@ -13,4 +14,9 @@
     </div>
 </article>
 {% endfor %}
+{% else %}
+<div class="alert alert-warning">
+    Belum ada laporan yang dibuat
+</div>
+{% endif %}
 {% endblock content%}
