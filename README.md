@@ -18,10 +18,16 @@ python3 -m venv env
 source ./env/bin/activate 
 ```
 
-Setelah itu, kita menginstall segala dependency yang kita butuhkan (yang tertulis dalam `setting.py`)
+Setelah itu, kita menginstall segala dependency yang kita butuhkan (yang tertulis dalam `settings.py`)
 
 ```
 pip3 install -r requirements.txt
+```
+
+Jika kita menambahkan dependency lagi, kita jangan lupa untuk memasukan ke dalam file `requirements.txt` (yang tertulis dalam `settings.py`). Setelah itu kita dapat menginstallnya kembali dengan petunjuk yang tepat berada diatas poin ini.
+
+```
+pip freeze > requirements.txt
 ```
 
 Kita bisa run website ini dalam local komputer dengan alamat port http://127.0.0.1:8000/ atau localhost:8000
